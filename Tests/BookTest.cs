@@ -37,5 +37,60 @@ namespace Library
 
       Assert.Equal(testList, result);
     }
+
+    [Fact]
+    public void Test_SaveAssignsIdToObject()
+    {
+      Book testBook = new Book("C# for dummies");
+      testBook.Save();
+
+      Book savedBook = Book.GetAll()[0];
+
+      int result = savedBook.GetId();
+      int testId = testBook.GetId();
+
+      Assert.Equal(testId, result);
+    }
+
+    [Fact]
+    public void Test_FindFindsBook()
+    {
+      Book testBook = new Book("C# for dummies");
+      testBook.Save();
+
+      Book foundBook = Book.Find(testBook.GetId());
+
+      Assert.Equal(testBook, foundBook);
+    }
+
+    [Fact]
+    public void Test_Delete_DeletesAuthorAssociationsFromDatabase()
+    {
+      Author testAuthor = new Author("Taylor");
+      testAuthor.Save();
+
+      Book testBook = new Book("Nathan Sucks");
+      testBook.Save();
+
+      testBook.AddAuthor(testAuthor);
+      testBook.Delete();
+
+      List<Book> resultAuthorBooks = testAuthor.GetBooks();
+      List<Book> testAuthorBooks = new List<Book> {};
+
+      Assert.Equal(testAuthorBooks, resultAuthorBooks);
+    }
+
+    [Fact]
+    public void Test_update()
+    {
+      Book testBook = new Book("Nathan's Yard");
+      testBook.Save();
+      testBook.Update("Taylor's Yard");
+
+      Book newBook = new Book ("Taylor's Yard");
+      newBook.Save();
+      Assert.Equal(newBook.GetTitle(), testBook.GetTitle());
+    }
   }
 }

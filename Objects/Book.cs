@@ -199,7 +199,7 @@ namespace Library
       SqlCommand cmd = new SqlCommand("DELETE FROM books WHERE id = @BookId; DELETE FROM book_author WHERE book_id = @BookId;", conn);
 
       SqlParameter bookIdParameter = new SqlParameter();
-      bookIdParameter.ParameterName = "@BookdId";
+      bookIdParameter.ParameterName = "@BookId";
       bookIdParameter.Value = this.GetId();
 
       cmd.Parameters.Add(bookIdParameter);
@@ -216,7 +216,7 @@ namespace Library
       SqlDataReader rdr;
       conn.Open();
 
-      SqlCommand cmd = new SqlCommand("UPDATE book SET title = @NewTitle OUTPUT INSERTED.title WHERE id = @BookId;", conn);
+      SqlCommand cmd = new SqlCommand("UPDATE books SET title = @NewTitle OUTPUT INSERTED.title WHERE id = @BookId;", conn);
 
       SqlParameter NewTitleParameter = new SqlParameter();
       NewTitleParameter.ParameterName = "@NewTitle";
