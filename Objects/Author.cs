@@ -21,7 +21,8 @@ namespace Library
       {
         return false;
       }
-      else{
+      else
+      {
         Author newAuthor = (Author) otherAuthor;
         bool idEquality = this.GetId() == newAuthor.GetId();
         bool nameEquality = this.GetName() == newAuthor.GetName();
@@ -49,7 +50,7 @@ namespace Library
       SqlDataReader rdr = null;
       conn.Open();
 
-      SqlCommand cmd = new SqlCommand("SELECT * FROM authors;", conn);
+      SqlCommand cmd = new SqlCommand("SELECT * FROM authors ORDER BY id ASC;", conn);
       rdr = cmd.ExecuteReader();
 
       while(rdr.Read())
@@ -77,7 +78,7 @@ namespace Library
       SqlDataReader rdr;
       conn.Open();
 
-      SqlCommand cmd = new SqlCommand("INSERT INTO authors (name) OUTPUT INSERTED.id VALUES (@AuthorName);", conn);
+      SqlCommand cmd = new SqlCommand("INSERT INTO authors(name) OUTPUT INSERTED.id VALUES(@AuthorName);", conn);
 
       SqlParameter nameParameter = new SqlParameter();
       nameParameter.ParameterName = "@AuthorName";
@@ -104,7 +105,7 @@ namespace Library
     {
       SqlConnection conn = DB.Connection();
       conn.Open();
-      SqlCommand cmd = new SqlCommand("DELETE FROM authors", conn);
+      SqlCommand cmd = new SqlCommand("DELETE FROM authors; DBCC CHECKIDENT ('authors', RESEED, 0)", conn);
       cmd.ExecuteNonQuery();
     }
 
@@ -149,7 +150,7 @@ namespace Library
       conn.Open();
       List<Book> books = new List<Book>{};
 
-      SqlCommand cmd = new SqlCommand("SELECT books.* FROM books JOIN book_author ON (book_author.book_id = books.id) JOIN authors ON (authors.id = book_author.author_id) WHERE authors.id = @AuthorId;", conn);
+      SqlCommand cmd = new SqlCommand("SELECT books.* FROM authors JOIN book_author ON (authors.id = book_author.author_id) JOIN books ON (book_author.book_id = books.id) WHERE authors.id = @AuthorId;", conn);
 
       SqlParameter bookIdParameter = new SqlParameter();
       bookIdParameter.ParameterName = "@AuthorId";
@@ -237,7 +238,7 @@ namespace Library
       cmd.Parameters.Add(authorIdParameter);
       rdr = cmd.ExecuteReader();
 
-      while(rdr.Read());
+      while(rdr.Read())
       {
         this._name = rdr.GetString(0);
       }
@@ -249,6 +250,19 @@ namespace Library
       {
         conn.Close();
       }
+    }
+    public static List<Author> SearchAuthor(string author)
+    {
+      List<Author> results = new List<Author> {};
+      List<Author> AuthorList = Author.GetAll();
+      foreach(Author A in AuthorList)
+      {
+        if (A.GetName().ToLower().Contains(author.ToLower()))
+        {
+          results.Add(A);
+        }
+      }
+      return results;
     }
   }
 }

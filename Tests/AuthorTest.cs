@@ -15,6 +15,7 @@ namespace Library
     public void Dispose()
     {
       Author.DeleteAll();
+      Book.DeleteAll();
     }
 
     [Fact]
@@ -91,7 +92,43 @@ namespace Library
 
       Author newAuthor = new Author("Nathan");
       newAuthor.Save();
+
       Assert.Equal(newAuthor.GetName(), testAuthor.GetName());
+    }
+    [Fact]
+    public void Test_GetBook()
+    {
+      Book newBook = new Book("C#", 1);
+
+      newBook.Save();
+
+      Author newAuthor = new Author("Taylor", 1);
+      newAuthor.Save();
+
+      newAuthor.AddBook(newBook);
+
+      List<Book> books = newAuthor.GetBooks();
+      Assert.Equal(newBook.GetTitle(), books[0].GetTitle());
+    }
+
+    [Fact]
+    public void Test_SearchAuthor()
+    {
+      Author testAuthor = new Author("Tay");
+      Author testAuthor2 = new Author("Taylor");
+      Author testAuthor3 = new Author("Taylore");
+      testAuthor.Save();
+      testAuthor2.Save();
+      testAuthor3.Save();
+
+      List<Author> results = Author.SearchAuthor("tay");
+      foreach(Author i in results)
+      {
+        Console.WriteLine("Author Search: Name: " + i.GetName() + ", ID: " + i.GetId());
+      }
+      List<Author> testList = new List<Author>{testAuthor, testAuthor2, testAuthor3};
+
+      Assert.Equal(testList, results);
     }
   }
 }

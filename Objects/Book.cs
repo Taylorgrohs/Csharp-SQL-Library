@@ -30,7 +30,7 @@ namespace Library
     {
       SqlConnection conn = DB.Connection();
       conn.Open();
-      SqlCommand cmd = new SqlCommand("DELETE FROM books;", conn);
+      SqlCommand cmd = new SqlCommand("DELETE FROM books; DBCC CHECKIDENT ('books', RESEED, 0)", conn);
       cmd.ExecuteNonQuery();
     }
     public override bool Equals(System.Object otherBook)
@@ -55,7 +55,7 @@ namespace Library
       SqlDataReader rdr = null;
       conn.Open();
 
-      SqlCommand cmd = new SqlCommand("SELECT * FROM books;", conn);
+      SqlCommand cmd = new SqlCommand("SELECT * FROM books ORDER BY id ASC;", conn);
       rdr = cmd.ExecuteReader();
 
       while(rdr.Read())
@@ -241,6 +241,20 @@ namespace Library
       {
         conn.Close();
       }
+    }
+
+    public static List<Book> SearchBook(string book)
+    {
+      List<Book> results = new List<Book>{};
+      List<Book> bookList = Book.GetAll();
+      foreach(Book B in bookList)
+      {
+        if (B.GetTitle().ToLower().Contains(book.ToLower()))
+        {
+          results.Add(B);
+        }
+      }
+      return results;
     }
   }
 }
