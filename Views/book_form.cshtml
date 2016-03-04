@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Add Book</title>
+  </head>
+  <body>
+    <form action="/books/new" method="post">
+      <label for="book-title">Book Title</label>
+      <input id="book-title" name="book-title" type="text">
+      <select name="author-id">
+        @foreach (var author in Model)
+        {
+          <option value="@author.GetId()">@author.GetName()</option>
+        }
+      </select>
+      <button type="submit">Add</button>
+    </form>
+    <p><a href="/">Home</a></p>
+  </body>
+</html>

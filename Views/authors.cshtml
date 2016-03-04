@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>authors</title>
+  </head>
+  <body>
+    <ul>
+      @foreach(var author in Model)
+      {
+        <li><a href="authors/@author.GetId()">@author.GetName()</a></li>
+      }
+    </ul>
+    <p><a href="/authors/new">Add new author</a></p>
+    <p><a href="/">Home</a></p>
+  </body>
+</html>
